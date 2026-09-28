@@ -28,6 +28,18 @@
         </div>
     </header>
 
+    <!-- Autenticação -->
+    <section id="auth-section" style="max-width:1200px;margin:16px auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+        <p id="status" style="margin:0;">A sessão ainda não foi consultada.</p>
+        <span id="login-links" style="display:flex;gap:12px;">
+            <a href="/oauth/login/google">Entrar com Google</a>
+            <a href="/oauth/login/github">Entrar com GitHub</a>
+        </span>
+        <form id="logout-form" method="post" action="/oauth/logout" style="display:none;margin:0;">
+            <button type="submit" class="btn secondary">Sair</button>
+        </form>
+    </section>
+
     <main class="dashboard-container">
         <div id="dashboard-grid" class="dashboard-grid">
             <!-- Cards serão injetados dinamicamente aqui -->
@@ -69,5 +81,6 @@
     </div>
 
     <script src="dashboard.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
