@@ -55,3 +55,5 @@ O projeto utiliza requisições não autenticadas na API do GitHub. Portanto, h�
 
 ## 📝 Licença
 [MIT](LICENSE)
+
+.
