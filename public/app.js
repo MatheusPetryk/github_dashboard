@@ -1,4 +1,3 @@
-
 // Consulta a sessão na mesma origem e atualiza a área de autenticação.
 (function () {
   var status = document.getElementById("status");
