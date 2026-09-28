@@ -1,4 +1,4 @@
-import { generateRandomString, calculateHash } from "../../shared/crypto.js";
+import { generateRandomString, calculateHash } from "../../_shared/crypto.js";
 
 export async function onRequestGet(context) {
     const provider = context.params.provider;
@@ -23,31 +23,32 @@ export async function onRequestGet(context) {
     ).bind(idHash, provider, stateHash, nonce, codeVerifier, expiresAt).run();
 
     const clientId = context.env[`${provider.toUpperCase()}_CLIENT_ID`];
-    const redirectUri = `\({context.env.PUBLIC_BASE_URL}/oauth/callback/\){provider}`;
-    
-    let authUrl = new URL(provider === 'google' 
-        ? 'https://accounts.google.com/o/oauth2/v2/auth' 
+    const redirectUri = `${context.env.PUBLIC_BASE_URL}/oauth/callback/${provider}`;
+
+    const authUrl = new URL(provider === 'google'
+        ? 'https://accounts.google.com/o/oauth2/v2/auth'
         : 'https://github.com/login/oauth/authorize');
 
     authUrl.searchParams.set('client_id', clientId);
     authUrl.searchParams.set('redirect_uri', redirectUri);
     authUrl.searchParams.set('response_type', 'code');
     authUrl.searchParams.set('state', state);
+    authUrl.searchParams.set('code_challenge', codeChallenge);
+    authUrl.searchParams.set('code_challenge_method', 'S256');
 
     if (provider === 'google') {
         authUrl.searchParams.set('scope', 'openid email profile');
         authUrl.searchParams.set('nonce', nonce);
-        authUrl.searchParams.set('code_challenge', codeChallenge);
-        authUrl.searchParams.set('code_challenge_method', 'S256');
     }
 
-    const cookie = `Host-oauth-tx=${transactionId}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`;
+    const cookie = `__Host-oauth-tx=${transactionId}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`;
 
     return new Response(null, {
         status: 302,
         headers: {
             'Location': authUrl.toString(),
-            'Set-Cookie': cookie
+            'Set-Cookie': cookie,
+            'Cache-Control': 'no-store'
         }
     });
 }
